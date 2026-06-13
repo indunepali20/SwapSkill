@@ -1,0 +1,22 @@
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text"
+           name="skill_have"
+           placeholder="Skill You Can Teach"
+           class="form-control mb-3">
+
+    <input type="text"
+           name="skill_want"
+           placeholder="Skill You Want To Learn"
+           class="form-control mb-3">
+
+    <textarea name="description"
+              class="form-control mb-3"
+              placeholder="Describe your skill"></textarea>
+
+    <button class="btn btn-success">
+        Add Skill
+    </button>
+
+</form>
