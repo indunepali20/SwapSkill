@@ -1,0 +1,16 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Database (DON'T upload)
+db.sqlite3
+
+# Virtual environment (if you have one)
+venv/
+env/
+
+# Django secret / local files
+*.log
+
+# VS Code settings (optional)
+.vscode/

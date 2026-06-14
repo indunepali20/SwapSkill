@@ -58,3 +58,6 @@ def add_skill(request):
         return redirect('home')
 
     return render(request, 'add_skill.html')
+
+
+    

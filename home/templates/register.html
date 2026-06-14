@@ -1,8 +1,54 @@
-<h2>Register</h2>
+{% extends 'base.html' %}
 
-<form method="POST">
-  {% csrf_token %}
-  <input name="username" placeholder="Username">
-  <input name="password" type="password" placeholder="Password">
-  <button>Register</button>
-</form>
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-5">
+
+            <div class="card border-0 shadow-lg rounded-4">
+
+                <div class="card-body p-5">
+
+                    <h2 class="text-center mb-4">
+                        Create Account
+                    </h2>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <input type="text"
+                               name="username"
+                               class="form-control mb-3"
+                               placeholder="Username">
+
+                        <input type="password"
+                               name="password"
+                               class="form-control mb-4"
+                               placeholder="Password">
+
+                        <button class="btn btn-success w-100">
+                            Register
+                        </button>
+
+                    </form>
+
+                    <p class="text-center mt-3">
+                        Already have an account?
+                        <a href="/login/">Login</a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
