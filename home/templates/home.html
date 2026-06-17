@@ -19,7 +19,7 @@
     left:0;
     width:100%;
     height:100%;
-    background: rgba(102, 2, 60, 0.65); /* Tyrian purple overlay */
+    background: rgba(102, 2, 60, 0.65);
 }
 
 .hero-content {
@@ -126,7 +126,6 @@
 
 <!-- HERO -->
 <section class="hero">
-
 <div class="hero-overlay"></div>
 
 <div class="container hero-content">
@@ -143,7 +142,6 @@
     </a>
 
 </div>
-
 </section>
 
 <!-- FEATURES -->
@@ -184,7 +182,6 @@
 </div>
 
 </div>
-
 </section>
 
 <!-- SKILLS -->
@@ -216,10 +213,18 @@
 
 </div>
 
-<div class="card-footer bg-white">
+<div class="card-footer bg-white d-flex justify-content-between align-items-center">
 
-<span class="poster">Posted by:</span>
-{{ skill.user.username }}
+<div>
+    <span class="poster">Posted by:</span>
+    {{ skill.user.username }}
+</div>
+
+{% if skill.user.profile.is_premium %}
+    <span class="badge bg-warning text-dark">
+        ⭐ Premium Member
+    </span>
+{% endif %}
 
 </div>
 
@@ -253,8 +258,5 @@
 </div>
 
 </section>
-
-
-
 
 {% endblock %}

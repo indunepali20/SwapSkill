@@ -8,4 +8,6 @@ urlpatterns = [
     path('add/', views.add_skill, name='add_skill'),
     path('logout/', views.logout_user, name='logout'),
     path('chatbot/', views.chatbot, name='chatbot'),
+    path('premium/', views.premium, name='premium'),
+    path("dashboard/", views.admin_dashboard, name="dashboard"),
 ]

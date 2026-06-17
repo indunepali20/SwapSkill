@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+
+    <h1>💎 Premium Membership</h1>
+
+    <p class="lead">
+        Unlock premium features on SwapSkill
+    </p>
+
+    <div class="card p-4 shadow">
+
+        <h4>Premium Benefits</h4>
+
+        <p> Premium Badge</p>
+        <p> Featured Skill Posts</p>
+        <p> Priority Visibility</p>
+
+        <h3>Rs. 199</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-warning btn-lg">
+                Upgrade Now
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
