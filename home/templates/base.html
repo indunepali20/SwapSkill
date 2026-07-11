@@ -29,7 +29,6 @@
             flex:1;
         }
 
-        /* NAVBAR */
         .navbar{
             background:rgba(102,2,60,.95)!important;
             position:sticky;
@@ -42,11 +41,18 @@
             color:white!important;
         }
 
-        .btn-theme{
-            background:var(--citron);
-            color:#222;
-            border:none;
-            font-weight:600;
+        .nav-link-custom{
+            color:white;
+            text-decoration:none;
+            margin:0 10px;
+            font-weight:500;
+            opacity:.9;
+        }
+
+        .nav-link-custom:hover{
+            color:#cad183;
+            text-decoration:underline;
+            opacity:1;
         }
 
         footer{
@@ -55,7 +61,7 @@
             margin-top:auto;
         }
 
-        /* ================= CHATBOT ================= */
+        /* Chatbot */
 
         #chat-button{
             position:fixed;
@@ -65,14 +71,14 @@
             height:60px;
             background:linear-gradient(135deg,#66023c,#cad183);
             color:white;
-            font-size:26px;
             border-radius:50%;
             display:flex;
-            align-items:center;
             justify-content:center;
+            align-items:center;
             cursor:pointer;
-            box-shadow:0 10px 25px rgba(0,0,0,0.3);
-            z-index:999999;
+            font-size:26px;
+            box-shadow:0 10px 25px rgba(0,0,0,.3);
+            z-index:9999;
         }
 
         #chat-window{
@@ -83,11 +89,11 @@
             height:420px;
             background:white;
             border-radius:15px;
-            box-shadow:0 15px 35px rgba(0,0,0,0.3);
+            box-shadow:0 15px 35px rgba(0,0,0,.3);
             display:none;
             flex-direction:column;
             overflow:hidden;
-            z-index:999999;
+            z-index:9999;
         }
 
         .chat-header{
@@ -101,7 +107,6 @@
             flex:1;
             padding:10px;
             overflow-y:auto;
-            font-size:14px;
             background:#f8f8f5;
         }
 
@@ -112,106 +117,155 @@
 
         .chat-input input{
             flex:1;
-            padding:10px;
             border:none;
             outline:none;
+            padding:10px;
         }
 
         .chat-input button{
-            background:#cad183;
             border:none;
-            padding:10px 15px;
+            background:#cad183;
+            padding:10px 18px;
             font-weight:bold;
             cursor:pointer;
         }
 
         .chat-input button:hover{
-            background:#b7c46f;
+            background:#b8c56e;
         }
+
     </style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
+
 <nav class="navbar navbar-expand-lg navbar-dark shadow">
+
     <div class="container">
+
         <a class="navbar-brand" href="/">SwapSkill</a>
 
         <div>
-            <a href="/login/" class="btn btn-outline-light me-2">Login</a>
-            <a href="/register/" class="btn btn-theme me-2">Register</a>
-            <a href="/add/" class="btn btn-success me-2">Add Skill</a>
-            <a href="/premium/" class="btn btn-warning me-2">
-    Premium
+
+            <a href="/" class="nav-link-custom">Home</a>
+            <a href="/add/" class="nav-link-custom">Add Skill</a>
+            <a href="/premium/" class="nav-link-custom">Premium</a>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'userDashboard' %}" class="nav-link-custom">
+     User Dashboard
 </a>
 
-</a>
-            <a href="/logout/" class="btn btn-danger">Logout</a>
+                {% if user.is_superuser %}
+                    <a href="/dashboard/" class="nav-link-custom">Admin Dashboard</a>
+                {% endif %}
+
+                <a href="/logout/" class="nav-link-custom">Logout</a>
+
+            {% else %}
+
+                <a href="/login/" class="nav-link-custom">Login</a>
+                <a href="/register/" class="nav-link-custom">Register</a>
+
+            {% endif %}
+
         </div>
+
     </div>
+
 </nav>
 
 <!-- PAGE CONTENT -->
+
 <div class="main-content">
+
     {% block content %}
     {% endblock %}
+
 </div>
 
-<!-- ================= CHATBOT (OUTSIDE BLOCK = FIXED) ================= -->
+<!-- CHATBOT -->
 
 <div id="chat-button" onclick="toggleChat()">💬</div>
 
 <div id="chat-window">
+
     <div class="chat-header">
-        🤖 SwapSkill chatBot
+        SwapSkill ChatBot
     </div>
 
     <div id="chatlog" class="chat-body"></div>
 
     <div class="chat-input">
+
         <input id="msg" type="text" placeholder="Ask something...">
+
         <button onclick="sendMsg()">Send</button>
+
     </div>
+
 </div>
 
 <script>
-function toggleChat(){
-    let box = document.getElementById("chat-window");
 
-    if(box.style.display === "flex"){
-        box.style.display = "none";
-    } else {
-        box.style.display = "flex";
+function toggleChat(){
+
+    let box=document.getElementById("chat-window");
+
+    if(box.style.display==="flex"){
+        box.style.display="none";
+    }else{
+        box.style.display="flex";
     }
+
 }
 
 function sendMsg(){
-    let msg = document.getElementById("msg").value;
-    let chatlog = document.getElementById("chatlog");
 
-    if(msg.trim() === "") return;
+    let msg=document.getElementById("msg").value;
 
-    chatlog.innerHTML += "<div><b>You:</b> " + msg + "</div>";
+    if(msg.trim()===""){
+        return;
+    }
 
-    fetch("/chatbot/?message=" + msg)
-    .then(res => res.json())
-    .then(data => {
-        chatlog.innerHTML += "<div><b>Bot:</b> " + data.reply + "</div>";
-        chatlog.scrollTop = chatlog.scrollHeight;
+    let chat=document.getElementById("chatlog");
+
+    chat.innerHTML += "<div><b>You:</b> "+msg+"</div>";
+
+    fetch("/chatbot/?message="+encodeURIComponent(msg))
+    .then(response=>response.json())
+    .then(data=>{
+        chat.innerHTML += "<div><b>Bot:</b> "+data.reply+"</div>";
+        chat.scrollTop = chat.scrollHeight;
     });
 
-    document.getElementById("msg").value = "";
+    document.getElementById("msg").value="";
+
 }
+
 </script>
 
 <!-- FOOTER -->
+
 <footer class="py-4">
+
     <div class="container text-center">
+
         <h5>SwapSkill</h5>
-        <p class="mb-1">Learn • Teach • Grow Together</p>
-        <small>© 2026 SwapSkill | Peer-to-Peer Skill Exchange Platform</small>
+
+        <p class="mb-1">
+            Learn • Teach • Grow Together
+        </p>
+
+        <small>
+            © 2026 SwapSkill | Peer-to-Peer Skill Exchange Platform
+        </small>
+
     </div>
+
 </footer>
 
 </body>

@@ -4,52 +4,91 @@
 
 <div class="container py-5">
 
-    <div class="row justify-content-center">
+<div class="row justify-content-center">
 
-        <div class="col-md-7">
+<div class="col-lg-8">
 
-            <div class="card border-0 shadow-lg rounded-4">
+<div class="card shadow-lg border-0 rounded-4">
 
-                <div class="card-body p-5">
+<div class="card-body p-5">
 
-                    <h2 class="text-center mb-4">
-                        Share Your Skill
-                    </h2>
+<div class="text-center mb-4">
 
-                    <form method="POST">
+<h2 style="color:#73004B;font-weight:bold;">
+Share Your Skill
+</h2>
 
-                        {% csrf_token %}
+<p style="color:#555;">
+Teach what you know and learn something new.
+</p>
 
-                        <input type="text"
-                               name="skill_have"
-                               class="form-control mb-3"
-                               placeholder="Skill You Can Teach">
+</div>
 
-                        <input type="text"
-                               name="skill_want"
-                               class="form-control mb-3"
-                               placeholder="Skill You Want To Learn">
+<form method="POST">
 
-                        <textarea
-                            name="description"
-                            rows="5"
-                            class="form-control mb-4"
-                            placeholder="Describe your skill">
-                        </textarea>
+{% csrf_token %}
 
-                        <button class="btn btn-success w-100">
-                            Add Skill
-                        </button>
+<div class="mb-3">
 
-                    </form>
+<label class="fw-bold">
+Skill You Can Teach
+</label>
 
-                </div>
+<input
+type="text"
+name="skill_have"
+class="form-control"
+placeholder="Python, Photoshop..."
+required>
 
-            </div>
+</div>
 
-        </div>
+<div class="mb-3">
 
-    </div>
+<label class="fw-bold">
+Skill You Want to Learn
+</label>
+
+<input
+type="text"
+name="skill_want"
+class="form-control"
+placeholder="UI Design, Java..."
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="fw-bold">
+Description
+</label>
+
+<textarea
+name="description"
+rows="5"
+class="form-control"
+required></textarea>
+
+</div>
+
+<button
+class="btn text-white w-100"
+style="background:#73004B;">
+
+Add Skill
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 

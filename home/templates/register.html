@@ -2,43 +2,145 @@
 
 {% block content %}
 
+<style>
+body{
+    background:#D4D98A;
+}
+
+.register-card{
+    border:none;
+    border-radius:20px;
+}
+
+.title{
+    color:#7A0045;
+    font-weight:bold;
+}
+
+.btn-theme{
+    background:#7A0045;
+    color:white;
+    border:none;
+}
+
+.btn-theme:hover{
+    background:#5b0034;
+    color:white;
+}
+
+.form-control:focus{
+    border-color:#7A0045;
+    box-shadow:0 0 8px rgba(122,0,69,.3);
+}
+
+a{
+    color:#7A0045;
+    text-decoration:none;
+}
+
+a:hover{
+    color:#5b0034;
+}
+</style>
+
 <div class="container py-5">
 
     <div class="row justify-content-center">
 
-        <div class="col-md-5">
+        <div class="col-md-6 col-lg-5">
 
-            <div class="card border-0 shadow-lg rounded-4">
+            <div class="card register-card shadow-lg">
 
                 <div class="card-body p-5">
 
-                    <h2 class="text-center mb-4">
-                        Create Account
-                    </h2>
+                    <div class="text-center mb-4">
+
+                        <h2 class="title">
+
+                            Create Account
+
+                        </h2>
+
+                        <p class="text-muted">
+
+                            Join SwapSkill today
+
+                        </p>
+
+                    </div>
+
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-warning">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
                     <form method="POST">
 
                         {% csrf_token %}
 
-                        <input type="text"
-                               name="username"
-                               class="form-control mb-3"
-                               placeholder="Username">
+                        <div class="mb-3">
 
-                        <input type="password"
-                               name="password"
-                               class="form-control mb-4"
-                               placeholder="Password">
+                            <label class="fw-bold">
 
-                        <button class="btn btn-success w-100">
-                            Register
+                                Username
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="username"
+                                class="form-control"
+                                placeholder="Choose Username"
+                                required>
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="fw-bold">
+
+                                Password
+
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Create Password"
+                                required>
+
+                        </div>
+
+                        <button class="btn btn-theme w-100 py-2">
+
+                            Create Account
+
                         </button>
 
                     </form>
 
-                    <p class="text-center mt-3">
+                    <hr>
+
+                    <p class="text-center">
+
                         Already have an account?
-                        <a href="/login/">Login</a>
+
+                        <a href="/login/">
+
+                            Login Here
+
+                        </a>
+
                     </p>
 
                 </div>

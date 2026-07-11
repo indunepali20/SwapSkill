@@ -3,148 +3,97 @@
 {% block content %}
 
 <style>
-
-/* HERO SECTION */
-.hero {
-    background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') center/cover no-repeat;
-    min-height: 85vh;
-    display: flex;
-    align-items: center;
-    position: relative;
+.hero{
+    background:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') center/cover no-repeat;
+    min-height:85vh;
+    display:flex;
+    align-items:center;
+    position:relative;
 }
-
-.hero-overlay {
-    position: absolute;
+.hero-overlay{
+    position:absolute;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background: rgba(102, 2, 60, 0.65);
+    background:rgba(102,2,60,.65);
 }
-
-.hero-content {
-    position: relative;
-    color: white;
-    max-width: 700px;
+.hero-content{
+    position:relative;
+    color:white;
+    max-width:700px;
 }
-
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 800;
+.hero h1{
+    font-size:3rem;
+    font-weight:800;
 }
-
-.hero p {
-    font-size: 1.2rem;
-    margin-top: 15px;
+.hero p{
+    font-size:1.2rem;
+    margin-top:15px;
 }
-
-/* BUTTON */
-.btn-main {
-    background: #cad183;
-    color: #2b2b2b;
-    padding: 12px 28px;
-    border-radius: 30px;
-    font-weight: bold;
-    border: none;
+.btn-main{
+    background:#cad183;
+    color:#222;
+    padding:12px 28px;
+    border-radius:30px;
+    font-weight:bold;
 }
-
-.btn-main:hover {
-    background: #b8c46f;
+.section-title{
+    text-align:center;
+    color:#66023c;
+    font-weight:800;
+    margin:60px 0 30px;
 }
-
-/* SECTION TITLE */
-.section-title {
-    text-align: center;
-    font-weight: 800;
-    color: #66023c;
-    margin: 60px 0 30px;
+.feature-card,.skill-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
-
-/* FEATURE CARDS */
-.feature-card {
-    border: none;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    transition: 0.3s;
+.feature-card img{
+    height:220px;
+    object-fit:cover;
 }
-
-.feature-card:hover {
-    transform: translateY(-8px);
+.badge-teach{
+    background:#cad183;
+    padding:6px 12px;
+    border-radius:20px;
 }
-
-.feature-card img {
-    height: 220px;
-    object-fit: cover;
+.badge-learn{
+    background:#66023c;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
 }
-
-/* SKILL CARDS */
-.skill-card {
-    border: none;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    transition: 0.3s;
+.poster{
+    color:#66023c;
+    font-weight:bold;
 }
-
-.skill-card:hover {
-    transform: translateY(-6px);
+.cta{
+    background:#cad183;
+    padding:70px 0;
+    margin-top:60px;
 }
-
-/* BADGES */
-.badge-teach {
-    background: #cad183;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.badge-learn {
-    background: #66023c;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* POSTED BY */
-.poster {
-    color: #66023c;
-    font-weight: bold;
-}
-
-/* CTA */
-.cta {
-    background: #cad183;
-    padding: 70px 0;
-    margin-top: 60px;
-}
-
 </style>
 
-<!-- HERO -->
 <section class="hero">
 <div class="hero-overlay"></div>
 
 <div class="container hero-content">
 
-    <h1>Learn & Share Skills with Real People</h1>
+<h1>Learn & Share Skills with Real People</h1>
 
-    <p>
-        Swap knowledge, connect with learners, and grow your career
-        through peer-to-peer skill exchange platform.
-    </p>
+<p>
+Swap knowledge, connect with learners, and grow your career through peer-to-peer skill exchange platform.
+</p>
 
-    <a href="/register/" class="btn btn-main mt-3">
-        Get Started
-    </a>
+<a href="/register/" class="btn btn-main mt-3">
+Get Started
+</a>
 
 </div>
 </section>
 
-<!-- FEATURES -->
 <section class="container">
 
 <h2 class="section-title">Why SwapSkill?</h2>
@@ -156,7 +105,7 @@
 <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d">
 <div class="card-body">
 <h4>Teach Skills</h4>
-<p>Share what you know with others and build your profile.</p>
+<p>Share what you know with others.</p>
 </div>
 </div>
 </div>
@@ -166,7 +115,7 @@
 <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f">
 <div class="card-body">
 <h4>Learn Skills</h4>
-<p>Learn directly from real people, not just courses.</p>
+<p>Learn directly from real people.</p>
 </div>
 </div>
 </div>
@@ -176,15 +125,15 @@
 <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644">
 <div class="card-body">
 <h4>Grow Network</h4>
-<p>Connect with students and professionals worldwide.</p>
+<p>Meet students and professionals.</p>
 </div>
 </div>
 </div>
 
 </div>
+
 </section>
 
-<!-- SKILLS -->
 <section class="container">
 
 <h2 class="section-title">Available Skills</h2>
@@ -203,7 +152,7 @@
 
 <h4 class="mt-3">{{ skill.skill_have }}</h4>
 
-<p class="mt-2">
+<p class="mt-3">
 <span class="badge-learn">Wants To Learn</span>
 <br><br>
 {{ skill.skill_want }}
@@ -213,17 +162,45 @@
 
 </div>
 
-<div class="card-footer bg-white d-flex justify-content-between align-items-center">
+<div class="card-footer bg-white">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
 
 <div>
-    <span class="poster">Posted by:</span>
-    {{ skill.user.username }}
+<span class="poster">Posted by:</span>
+{{ skill.user.username }}
 </div>
 
 {% if skill.user.profile.is_premium %}
-    <span class="badge bg-warning text-dark">
-        ⭐ Premium Member
-    </span>
+<span class="badge bg-warning text-dark">
+⭐ Premium
+</span>
+{% endif %}
+
+</div>
+
+{% if user.is_authenticated %}
+
+{% if skill.user != user %}
+
+<a href="{% url 'request_swap' skill.id %}" class="btn btn-success w-100">
+🔄 Request Skill Swap
+</a>
+
+{% else %}
+
+<button class="btn btn-secondary w-100" disabled>
+Your Skill
+</button>
+
+{% endif %}
+
+{% else %}
+
+<a href="/login/" class="btn btn-primary w-100">
+Login to Request Swap
+</a>
+
 {% endif %}
 
 </div>
@@ -234,8 +211,10 @@
 
 {% empty %}
 
-<div class="text-center">
+<div class="col-12 text-center">
+
 <h4>No skills available yet</h4>
+
 </div>
 
 {% endfor %}
@@ -244,7 +223,6 @@
 
 </section>
 
-<!-- CTA -->
 <section class="cta text-center">
 
 <div class="container">
@@ -253,7 +231,9 @@
 
 <p>Join SwapSkill and start exchanging knowledge today.</p>
 
-<a href="/add/" class="btn btn-main mt-2">Add Skill</a>
+<a href="/add/" class="btn btn-main">
+Add Skill
+</a>
 
 </div>
 

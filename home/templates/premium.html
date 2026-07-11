@@ -2,33 +2,139 @@
 
 {% block content %}
 
-<div class="container text-center mt-5">
+<div class="container py-5">
 
-    <h1>💎 Premium Membership</h1>
+    <div class="text-center mb-5">
 
-    <p class="lead">
-        Unlock premium features on SwapSkill
-    </p>
+        <h1 style="color:#73004B;font-weight:bold;">
+            Premium Membership
+        </h1>
 
-    <div class="card p-4 shadow">
+        <p style="font-size:18px;color:#555;">
+            Unlock exclusive features and make your skills stand out on SwapSkill.
+        </p>
 
-        <h4>Premium Benefits</h4>
+    </div>
 
-        <p> Premium Badge</p>
-        <p> Featured Skill Posts</p>
-        <p> Priority Visibility</p>
+    <div class="row justify-content-center">
 
-        <h3>Rs. 199</h3>
+        <div class="col-lg-6">
 
-        <form method="POST">
-            {% csrf_token %}
-            <button class="btn btn-warning btn-lg">
-                Upgrade Now
-            </button>
-        </form>
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+
+                        <div style="font-size:60px;">👑</div>
+
+                        <h3 style="color:#73004B;font-weight:bold;">
+                            Become a Premium Member
+                        </h3>
+
+                    </div>
+
+                    <ul class="list-group list-group-flush mb-4">
+
+                        <li class="list-group-item">
+                            ⭐ Premium Badge
+                        </li>
+
+                        <li class="list-group-item">
+                            📌 Featured Skill Posts
+                        </li>
+
+                        <li class="list-group-item">
+                            🔍 Higher Search Visibility
+                        </li>
+
+                        <li class="list-group-item">
+                            🔄 Unlimited Skill Swap Requests
+                        </li>
+
+                        <li class="list-group-item">
+                            💬 Priority Support
+                        </li>
+
+                    </ul>
+
+                    <div class="text-center">
+
+                        <h2 style="color:#73004B;font-weight:bold;">
+                            Rs. 199
+                        </h2>
+
+                        <p class="text-muted">
+                            One-Time Payment
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="pay-btn"
+                        class="btn text-white w-100 mt-3"
+                        style="background:#73004B;font-size:18px;">
+
+                        💳 Pay with Khalti
+
+                    </button>
+
+                    <p class="text-center mt-3 text-muted">
+
+                        Secure payment powered by Khalti.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<script>
+
+document.getElementById("pay-btn").onclick = function () {
+
+    fetch("/pay/", {
+
+        method: "POST",
+
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if (data.payment_url) {
+
+            window.location.href = data.payment_url;
+
+        } else {
+
+            alert("Payment could not be started.\n\n" + JSON.stringify(data, null, 2));
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.log(error);
+
+        alert("Server Error");
+
+    });
+
+}
+
+</script>
 
 {% endblock %}
