@@ -5,9 +5,13 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Skill, Profile, SwapRequest
+from .models import Skill, Profile, SwapRequest, Message
 
 import json
 import requests
+from django.db.models import Q
+from django.http import JsonResponse
+import json
 
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -21,23 +25,160 @@ def home(request):
 
 
 # CHATBOT
+
 def chatbot(request):
-    message = request.GET.get("message", "").lower()
 
-    if "hello" in message:
-        reply = "Hello 👋 Welcome to SwapSkill!"
-    elif "skill" in message:
-        reply = "You can add or learn skills from the platform 🚀"
-    elif "login" in message:
-        reply = "Go to login page to access your account 🔐"
-    elif "register" in message:
-        reply = "Register to start sharing skills 🧠"
-    elif "payment" in message:
-        reply = "Payment feature will be added soon 💰"
-    else:
-        reply = "Sorry, I didn’t understand."
+    if request.method == "POST":
 
-    return JsonResponse({"reply": reply})
+        body = json.loads(request.body)
+
+        message = body.get("message", "").lower().strip()
+
+        # Greetings
+        if any(word in message for word in [
+            "hi","hello","hey","namaste"
+        ]):
+            answer = (
+                "👋 Hello! Welcome to SwapSkill. "
+                "How can I help you today?"
+            )
+
+        # About SwapSkill
+        elif "swapskill" in message or "what is swapskill" in message:
+            answer = (
+                "SwapSkill is a platform where users exchange skills "
+                "instead of paying money."
+            )
+
+        # Registration
+        elif "register" in message or "signup" in message:
+            answer = (
+                "Click Register from the navigation bar and create your account."
+            )
+
+        # Login
+        elif "login" in message:
+            answer = (
+                "Click Login from the menu and enter your username and password."
+            )
+
+        # Add Skill
+        elif "add skill" in message or "post skill" in message:
+            answer = (
+                "Go to Add Skill and enter:\n"
+                "• Skill you can teach\n"
+                "• Skill you want to learn\n"
+                "• Description"
+            )
+
+        # Premium
+        elif "premium" in message:
+            answer = (
+                "Premium users receive:\n"
+                "⭐ Premium badge\n"
+                "⭐ Featured skills\n"
+                "⭐ Unlimited swap requests\n"
+                "⭐ Higher visibility"
+            )
+
+        # Payment
+        elif "payment" in message or "khalti" in message:
+            answer = (
+                "SwapSkill supports Khalti payment for Premium Membership."
+            )
+
+        # Dashboard
+        elif "dashboard" in message:
+            answer = (
+                "Open My Dashboard to manage your profile, skills, swap requests, and chats."
+            )
+
+        # Chat
+        elif "chat" in message or "message" in message:
+            answer = (
+                "After a swap request is accepted, both users can open the chat and communicate."
+            )
+
+        # Request
+        elif "swap request" in message or "request skill" in message:
+            answer = (
+                "Open any skill and click Request Swap. "
+                "The owner can Accept or Reject your request."
+            )
+
+        # Python
+        elif "python" in message:
+            answer = (
+                "Python is one of the most popular programming languages for web development, AI, automation, and data science."
+            )
+
+        # Django
+        elif "django" in message:
+            answer = (
+                "Django is a Python web framework used to build secure and scalable web applications."
+            )
+
+        # HTML
+        elif "html" in message:
+            answer = (
+                "HTML is used to create the structure of webpages."
+            )
+
+        # CSS
+        elif "css" in message:
+            answer = (
+                "CSS is used to style webpages and make them beautiful."
+            )
+
+        # JavaScript
+        elif "javascript" in message or "js" in message:
+            answer = (
+                "JavaScript adds interactivity to websites."
+            )
+
+        # Skills
+        elif "recommend skill" in message or "popular skill" in message:
+            answer = (
+                "Popular skills include:\n"
+                "• Python\n"
+                "• Django\n"
+                "• Java\n"
+                "• Graphic Design\n"
+                "• UI/UX\n"
+                "• Digital Marketing\n"
+                "• Video Editing"
+            )
+
+        # Thanks
+        elif "thank" in message:
+            answer = (
+                "You're welcome! 😊 Happy Skill Swapping!"
+            )
+
+        # Bye
+        elif "bye" in message:
+            answer = (
+                "Goodbye! Hope to see you again on SwapSkill 👋"
+            )
+
+        # Default
+        else:
+            answer = (
+                "🤖 Sorry, I don't understand that yet.\n"
+                "Try asking about:\n"
+                "• Register\n"
+                "• Premium\n"
+                "• Add Skill\n"
+                "• Swap Request\n"
+                "• Chat\n"
+                "• Python\n"
+                "• Django"
+            )
+
+        return JsonResponse({
+            "response": answer
+        })
+
 
 
 # PREMIUM PAGE
@@ -271,17 +412,46 @@ def reject_request(request, request_id):
     messages.success(request, "Swap request rejected.")
 
     return redirect("userDashboard")
+
+from django.db.models import Q
+
 @login_required
 def admin_users(request):
 
     if not request.user.is_superuser:
         return redirect("home")
 
+    search = request.GET.get("search", "")
+
     users = User.objects.all().order_by("-date_joined")
 
+    if search:
+        users = users.filter(
+            Q(username__icontains=search) |
+            Q(email__icontains=search)
+        )
+
     return render(request, "admin/users.html", {
-        "users": users
+        "users": users,
+        "search": search,
+        "total_users": users.count(),
     })
+@login_required
+def delete_user(request, user_id):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    user = User.objects.get(id=user_id)
+
+    if user.is_superuser:
+        messages.error(request, "You cannot delete the admin account.")
+    else:
+        user.delete()
+        messages.success(request, "User deleted successfully.")
+
+    return redirect("admin_users")
+
 
 
 @login_required
@@ -290,24 +460,76 @@ def admin_skills(request):
     if not request.user.is_superuser:
         return redirect("home")
 
-    skills = Skill.objects.all().order_by("-id")
+    search = request.GET.get("search", "")
+
+    skills = Skill.objects.select_related("user").all().order_by("-created_at")
+
+    if search:
+        skills = skills.filter(
+            Q(skill_have__icontains=search) |
+            Q(skill_want__icontains=search) |
+            Q(user__username__icontains=search)
+        )
 
     return render(request, "admin/skills.html", {
-        "skills": skills
+        "skills": skills,
+        "search": search,
+        "total_skills": skills.count(),
     })
+@login_required
+def delete_skill(request, skill_id):
 
+    if not request.user.is_superuser:
+        return redirect("home")
 
+    skill = Skill.objects.get(id=skill_id)
+    skill.delete()
+
+    messages.success(request, "Skill deleted successfully.")
+
+    return redirect("admin_skills")
+    
 @login_required
 def admin_swaps(request):
 
     if not request.user.is_superuser:
         return redirect("home")
 
-    swaps = SwapRequest.objects.all().order_by("-id")
+    search = request.GET.get("search", "")
+
+    swaps = SwapRequest.objects.select_related(
+        "sender",
+        "receiver",
+        "skill"
+    ).all().order_by("-created_at")
+
+    if search:
+        swaps = swaps.filter(
+            Q(sender__username__icontains=search) |
+            Q(receiver__username__icontains=search) |
+            Q(skill__skill_have__icontains=search)
+        )
 
     return render(request, "admin/swaps.html", {
-        "swaps": swaps
+        "swaps": swaps,
+        "search": search,
+        "total_swaps": swaps.count(),
     })
+
+
+@login_required
+def delete_swap(request, swap_id):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    swap = SwapRequest.objects.get(id=swap_id)
+
+    swap.delete()
+
+    messages.success(request, "Swap deleted successfully.")
+
+    return redirect("admin_swaps")
 
 
 @login_required
@@ -316,11 +538,47 @@ def admin_premium(request):
     if not request.user.is_superuser:
         return redirect("home")
 
-    profiles = Profile.objects.filter(is_premium=True)
+    search = request.GET.get("search", "")
 
-    return render(request, "admin/premium.html", {
-        "profiles": profiles
-    })
+    profiles = Profile.objects.select_related("user").filter(
+        is_premium=True
+    )
+
+    if search:
+        profiles = profiles.filter(
+            user__username__icontains=search
+        )
+
+    context = {
+        "profiles": profiles,
+        "search": search,
+        "total": profiles.count()
+    }
+
+    return render(
+        request,
+        "admin/premium.html",
+        context
+    )
+
+
+@login_required
+def remove_premium(request, profile_id):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    profile = Profile.objects.get(id=profile_id)
+
+    profile.is_premium = False
+    profile.save()
+
+    messages.success(
+        request,
+        "Premium removed successfully."
+    )
+
+    return redirect("admin_premium")
 
 
 @login_required
@@ -329,7 +587,10 @@ def admin_payments(request):
     if not request.user.is_superuser:
         return redirect("home")
 
-    return render(request, "admin/payments.html")
+    return render(
+        request,
+        "admin/payments.html"
+    )
 
 
 @login_required
@@ -339,12 +600,28 @@ def admin_reports(request):
         return redirect("home")
 
     context = {
-        "total_users": User.objects.count(),
-        "total_skills": Skill.objects.count(),
-        "total_premium": Profile.objects.filter(is_premium=True).count(),
+        "users": User.objects.count(),
+        "skills": Skill.objects.count(),
+        "premium": Profile.objects.filter(
+            is_premium=True
+        ).count(),
+        "swaps": SwapRequest.objects.count(),
+        "accepted": SwapRequest.objects.filter(
+            status="Accepted"
+        ).count(),
+        "pending": SwapRequest.objects.filter(
+            status="Pending"
+        ).count(),
+        "rejected": SwapRequest.objects.filter(
+            status="Rejected"
+        ).count(),
     }
 
-    return render(request, "admin/reports.html", context)
+    return render(
+        request,
+        "admin/reports.html",
+        context
+    )
 
 
 @login_required
@@ -353,5 +630,50 @@ def admin_settings(request):
     if not request.user.is_superuser:
         return redirect("home")
 
-    return render(request, "admin/settings.html")
-    
+    return render(
+        request,
+        "admin/settings.html"
+    )
+
+
+@login_required
+def chat(request, swap_id):
+
+    swap = SwapRequest.objects.get(id=swap_id)
+
+    if request.user != swap.sender and request.user != swap.receiver:
+        return redirect("home")
+
+    if swap.status != "Accepted":
+        messages.error(
+            request,
+            "Chat is available only after the swap is accepted."
+        )
+        return redirect("userDashboard")
+
+    if request.method == "POST":
+
+        text = request.POST.get("message")
+
+        if text and text.strip():
+
+            Message.objects.create(
+                swap=swap,
+                sender=request.user,
+                message=text
+            )
+
+        return redirect("chat", swap_id=swap.id)
+
+    chat_messages = Message.objects.filter(
+        swap=swap
+    ).order_by("created_at")
+
+    return render(
+        request,
+        "chat.html",
+        {
+            "swap": swap,
+            "messages": chat_messages,
+        }
+    )

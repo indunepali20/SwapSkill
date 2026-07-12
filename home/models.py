@@ -1,9 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db import models
-from django.contrib.auth.models import User
-
-
 
 
 class Profile(models.Model):
@@ -25,7 +21,6 @@ class Skill(models.Model):
         return f"{self.skill_have} - {self.user.username}"
 
 
-        
 class SwapRequest(models.Model):
     sender = models.ForeignKey(
         User,
@@ -58,3 +53,38 @@ class SwapRequest(models.Model):
 
     def __str__(self):
         return f"{self.sender} -> {self.receiver} ({self.status})"
+
+
+class Message(models.Model):
+    swap = models.ForeignKey(
+        SwapRequest,
+        on_delete=models.CASCADE,
+        related_name="messages"
+    )
+
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    message = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.sender.username}: {self.message[:30]}"
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField()
+    payment_method = models.CharField(max_length=50)
+    status = models.CharField(max_length=20, default="Completed")
+    transaction_id = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - Rs. {self.amount}"

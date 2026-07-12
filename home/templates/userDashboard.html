@@ -4,6 +4,10 @@
 
 <style>
 
+body{
+    background:#f8f9f5;
+}
+
 .dashboard-title{
     color:#66023c;
     font-weight:700;
@@ -12,40 +16,45 @@
 .profile-card,
 .custom-card{
     border:none;
-    border-radius:18px;
+    border-radius:20px;
+    overflow:hidden;
     box-shadow:0 10px 25px rgba(0,0,0,.08);
+    margin-bottom:30px;
 }
 
 .card-header-theme{
     background:#66023c;
     color:white;
-    border-radius:18px 18px 0 0 !important;
+    padding:18px;
 }
 
 .profile-img{
     width:120px;
     height:120px;
     border-radius:50%;
-    border:4px solid #cad183;
+    border:5px solid #cad183;
 }
 
 .skill-box{
+    background:white;
     border:2px solid #cad183;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:15px;
+    border-radius:15px;
+    padding:18px;
+    margin-bottom:18px;
     transition:.3s;
 }
 
 .skill-box:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transform:translateY(-4px);
+    box-shadow:0 10px 20px rgba(0,0,0,.08);
 }
 
 .btn-theme{
     background:#66023c;
     color:white;
     border:none;
+    border-radius:10px;
+    padding:8px 18px;
 }
 
 .btn-theme:hover{
@@ -53,21 +62,70 @@
     color:#222;
 }
 
+.btn-accept{
+    background:#cad183;
+    color:#222;
+    border:none;
+    border-radius:10px;
+}
+
+.btn-accept:hover{
+    background:#b8c56b;
+}
+
+.btn-reject{
+    background:#66023c;
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+
+.btn-reject:hover{
+    background:#4d012d;
+}
+
+.badge-premium{
+    background:#cad183;
+    color:#222;
+    padding:8px 15px;
+}
+
+.badge-free{
+    background:#66023c;
+    color:white;
+    padding:8px 15px;
+}
+
+.badge-pending{
+    background:#ffc107;
+    color:#222;
+}
+
+.badge-accepted{
+    background:#cad183;
+    color:#222;
+}
+
+.badge-rejected{
+    background:#66023c;
+    color:white;
+}
+
 </style>
 
 <div class="container py-5">
 
 <h2 class="text-center dashboard-title mb-5">
-
 👤 My Dashboard
-
 </h2>
 
 <div class="row">
 
+<!-- LEFT PROFILE -->
+
 <div class="col-md-4">
 
-<div class="card profile-card mb-4">
+<div class="card profile-card">
 
 <div class="card-body text-center">
 
@@ -83,18 +141,14 @@ class="profile-img mb-3">
 
 {% if profile.is_premium %}
 
-<span class="badge bg-warning text-dark p-2">
-
+<span class="badge badge-premium">
 ⭐ Premium Member
-
 </span>
 
 {% else %}
 
-<span class="badge bg-secondary p-2">
-
+<span class="badge badge-free">
 Free User
-
 </span>
 
 {% endif %}
@@ -104,9 +158,7 @@ Free User
 <h6>Total Skills</h6>
 
 <h2 style="color:#66023c;">
-
 {{ my_skills.count }}
-
 </h2>
 
 </div>
@@ -115,16 +167,18 @@ Free User
 
 </div>
 
+<!-- RIGHT CONTENT -->
+
 <div class="col-md-8">
 
-<div class="card custom-card mb-4">
+<!-- MY SKILLS -->
+
+<div class="card custom-card">
 
 <div class="card-header card-header-theme">
 
 <h5 class="mb-0">
-
- My Skills
-
+📚 My Skills
 </h5>
 
 </div>
@@ -136,23 +190,16 @@ Free User
 <div class="skill-box">
 
 <h5 style="color:#66023c;">
-
 {{ skill.skill_have }}
-
 </h5>
 
 <p>
-
 <b>Want to Learn:</b>
-
 {{ skill.skill_want }}
-
 </p>
 
 <p>
-
 {{ skill.description }}
-
 </p>
 
 </div>
@@ -167,14 +214,14 @@ Free User
 
 </div>
 
-<div class="card custom-card mb-4">
+<!-- RECEIVED REQUESTS -->
+
+<div class="card custom-card">
 
 <div class="card-header card-header-theme">
 
 <h5 class="mb-0">
-
- Received Swap Requests
-
+📩 Received Swap Requests
 </h5>
 
 </div>
@@ -185,50 +232,36 @@ Free User
 
 <div class="skill-box">
 
-<h5>
-
-{{ request.sender.username }}
-
-</h5>
+<h5>{{ request.sender.username }}</h5>
 
 <p>
 
 Requested your skill
 
-<b>
-
-{{ request.skill.skill_have }}
-
-</b>
+<b>{{ request.skill.skill_have }}</b>
 
 </p>
 
 <p>
 
-Status:
+Status :
 
 {% if request.status == "Pending" %}
 
-<span class="badge bg-warning">
-
+<span class="badge badge-pending">
 Pending
-
 </span>
 
 {% elif request.status == "Accepted" %}
 
-<span class="badge bg-success">
-
+<span class="badge badge-accepted">
 Accepted
-
 </span>
 
 {% else %}
 
-<span class="badge bg-danger">
-
+<span class="badge badge-rejected">
 Rejected
-
 </span>
 
 {% endif %}
@@ -237,19 +270,26 @@ Rejected
 
 {% if request.status == "Pending" %}
 
-<a
-href="{% url 'accept_request' request.id %}"
-class="btn btn-success btn-sm">
+<a href="{% url 'accept_request' request.id %}"
+class="btn btn-accept">
 
-Accept
+✔ Accept
 
 </a>
 
-<a
-href="{% url 'reject_request' request.id %}"
-class="btn btn-danger btn-sm">
+<a href="{% url 'reject_request' request.id %}"
+class="btn btn-reject">
 
-Reject
+✖ Reject
+
+</a>
+
+{% elif request.status == "Accepted" %}
+
+<a href="{% url 'chat' request.id %}"
+class="btn btn-theme">
+
+💬 Open Chat
 
 </a>
 
@@ -259,11 +299,7 @@ Reject
 
 {% empty %}
 
-<p>
-
-No requests received.
-
-</p>
+<p>No requests received.</p>
 
 {% endfor %}
 
@@ -271,14 +307,14 @@ No requests received.
 
 </div>
 
+<!-- SENT REQUESTS -->
+
 <div class="card custom-card">
 
 <div class="card-header card-header-theme">
 
 <h5 class="mb-0">
-
- Sent Requests
-
+📤 Sent Requests
 </h5>
 
 </div>
@@ -307,23 +343,46 @@ No requests received.
 
 <p>
 
-<span class="badge bg-info">
+Status :
 
-{{ request.status }}
+{% if request.status == "Pending" %}
 
+<span class="badge badge-pending">
+Pending
 </span>
 
+{% elif request.status == "Accepted" %}
+
+<span class="badge badge-accepted">
+Accepted
+</span>
+
+{% else %}
+
+<span class="badge badge-rejected">
+Rejected
+</span>
+
+{% endif %}
+
 </p>
+
+{% if request.status == "Accepted" %}
+
+<a href="{% url 'chat' request.id %}"
+class="btn btn-theme">
+
+💬 Open Chat
+
+</a>
+
+{% endif %}
 
 </div>
 
 {% empty %}
 
-<p>
-
-No requests sent.
-
-</p>
+<p>No requests sent.</p>
 
 {% endfor %}
 
