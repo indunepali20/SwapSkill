@@ -16,8 +16,6 @@ import json
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-
-
 # HOME
 def home(request):
     skills = Skill.objects.all()
@@ -25,159 +23,112 @@ def home(request):
 
 
 # CHATBOT
-
+# CHATBOT
+@csrf_exempt
 def chatbot(request):
 
-    if request.method == "POST":
+    if request.method != "POST":
+        return JsonResponse({"response": "Only POST requests are allowed."})
 
-        body = json.loads(request.body)
+    try:
+        body = json.loads(request.body.decode("utf-8"))
+    except:
+        return JsonResponse({"response": "Invalid request."})
 
-        message = body.get("message", "").lower().strip()
+    message = body.get("message", "").lower().strip()
 
-        # Greetings
-        if any(word in message for word in [
-            "hi","hello","hey","namaste"
-        ]):
-            answer = (
-                "👋 Hello! Welcome to SwapSkill. "
-                "How can I help you today?"
-            )
+    # Greetings
+    if any(word in message for word in ["hi", "hello", "hey", "namaste"]):
+        answer = "👋 Hello! Welcome to SwapSkill. How can I help you today?"
 
-        # About SwapSkill
-        elif "swapskill" in message or "what is swapskill" in message:
-            answer = (
-                "SwapSkill is a platform where users exchange skills "
-                "instead of paying money."
-            )
+    elif "swapskill" in message or "what is swapskill" in message:
+        answer = "SwapSkill is a platform where users exchange skills instead of paying money."
 
-        # Registration
-        elif "register" in message or "signup" in message:
-            answer = (
-                "Click Register from the navigation bar and create your account."
-            )
+    elif "register" in message or "signup" in message:
+        answer = "Click Register from the navigation bar and create your account."
 
-        # Login
-        elif "login" in message:
-            answer = (
-                "Click Login from the menu and enter your username and password."
-            )
+    elif "login" in message:
+        answer = "Click Login from the menu and enter your username and password."
 
-        # Add Skill
-        elif "add skill" in message or "post skill" in message:
-            answer = (
-                "Go to Add Skill and enter:\n"
-                "• Skill you can teach\n"
-                "• Skill you want to learn\n"
-                "• Description"
-            )
+    elif "add skill" in message or "post skill" in message:
+        answer = (
+            "Go to Add Skill and enter:\n"
+            "• Skill you can teach\n"
+            "• Skill you want to learn\n"
+            "• Description"
+        )
 
-        # Premium
-        elif "premium" in message:
-            answer = (
-                "Premium users receive:\n"
-                "⭐ Premium badge\n"
-                "⭐ Featured skills\n"
-                "⭐ Unlimited swap requests\n"
-                "⭐ Higher visibility"
-            )
+    elif "premium" in message:
+        answer = (
+            "Premium users receive:\n"
+            "⭐ Premium badge\n"
+            "⭐ Featured skills\n"
+            "⭐ Unlimited swap requests\n"
+            "⭐ Higher visibility"
+        )
 
-        # Payment
-        elif "payment" in message or "khalti" in message:
-            answer = (
-                "SwapSkill supports Khalti payment for Premium Membership."
-            )
+    elif "payment" in message or "khalti" in message:
+        answer = "SwapSkill supports Khalti payment for Premium Membership."
 
-        # Dashboard
-        elif "dashboard" in message:
-            answer = (
-                "Open My Dashboard to manage your profile, skills, swap requests, and chats."
-            )
+    elif "dashboard" in message:
+        answer = "Open My Dashboard to manage your profile, skills, swap requests and chats."
 
-        # Chat
-        elif "chat" in message or "message" in message:
-            answer = (
-                "After a swap request is accepted, both users can open the chat and communicate."
-            )
+    elif "chat" in message or "message" in message:
+        answer = "After a swap request is accepted, both users can chat."
 
-        # Request
-        elif "swap request" in message or "request skill" in message:
-            answer = (
-                "Open any skill and click Request Swap. "
-                "The owner can Accept or Reject your request."
-            )
+    elif "swap request" in message or "request skill" in message:
+        answer = "Open any skill and click Request Swap."
 
-        # Python
-        elif "python" in message:
-            answer = (
-                "Python is one of the most popular programming languages for web development, AI, automation, and data science."
-            )
+    elif "python" in message:
+        answer = "Python is one of the most popular programming languages."
 
-        # Django
-        elif "django" in message:
-            answer = (
-                "Django is a Python web framework used to build secure and scalable web applications."
-            )
+    elif "django" in message:
+        answer = "Django is a Python web framework."
 
-        # HTML
-        elif "html" in message:
-            answer = (
-                "HTML is used to create the structure of webpages."
-            )
+    elif "html" in message:
+        answer = "HTML is used to build webpage structure."
 
-        # CSS
-        elif "css" in message:
-            answer = (
-                "CSS is used to style webpages and make them beautiful."
-            )
+    elif "css" in message:
+        answer = "CSS is used to style webpages."
 
-        # JavaScript
-        elif "javascript" in message or "js" in message:
-            answer = (
-                "JavaScript adds interactivity to websites."
-            )
+    elif "javascript" in message or "js" in message:
+        answer = "JavaScript adds interactivity to websites."
 
-        # Skills
-        elif "recommend skill" in message or "popular skill" in message:
-            answer = (
-                "Popular skills include:\n"
-                "• Python\n"
-                "• Django\n"
-                "• Java\n"
-                "• Graphic Design\n"
-                "• UI/UX\n"
-                "• Digital Marketing\n"
-                "• Video Editing"
-            )
+    elif "recommend skill" in message or "popular skill" in message:
+        answer = (
+            "Popular skills include:\n"
+            "• Python\n"
+            "• Django\n"
+            "• Java\n"
+            "• Graphic Design\n"
+            "• UI/UX\n"
+            "• Digital Marketing\n"
+            "• Video Editing"
+        )
 
-        # Thanks
-        elif "thank" in message:
-            answer = (
-                "You're welcome! 😊 Happy Skill Swapping!"
-            )
+    elif "thank" in message:
+        answer = "You're welcome! 😊 Happy Skill Swapping!"
 
-        # Bye
-        elif "bye" in message:
-            answer = (
-                "Goodbye! Hope to see you again on SwapSkill 👋"
-            )
+    elif "bye" in message:
+        answer = "Goodbye! Hope to see you again on SwapSkill 👋"
 
-        # Default
-        else:
-            answer = (
-                "🤖 Sorry, I don't understand that yet.\n"
-                "Try asking about:\n"
-                "• Register\n"
-                "• Premium\n"
-                "• Add Skill\n"
-                "• Swap Request\n"
-                "• Chat\n"
-                "• Python\n"
-                "• Django"
-            )
+    else:
+        answer = (
+            "🤖 Sorry, I don't understand that yet.\n"
+            "Try asking about Register, Premium, Add Skill, Swap Request, Chat, Python or Django."
+        )
 
-        return JsonResponse({
-            "response": answer
-        })
+    return JsonResponse({"response": answer})
+
+        
+
+
+       
+        
+
+        
+       
+         
 
 
 
@@ -239,7 +190,14 @@ def login_user(request):
 
         if user:
             login(request, user)
-            return redirect("home")
+
+            # If admin → Admin Dashboard
+            if user.is_superuser:
+                return redirect("dashboard")
+
+            # If normal user → User Dashboard
+            return redirect("userDashboard")
+
         else:
             messages.error(request, "Invalid username or password.")
 
@@ -249,7 +207,7 @@ def login_user(request):
 # LOGOUT
 def logout_user(request):
     logout(request)
-    return redirect('login')
+    return redirect("login")
 
 
 # ADD SKILL
@@ -357,30 +315,29 @@ def request_swap(request, skill_id):
 @login_required
 def userDashboard(request):
 
+    if request.user.is_superuser:
+        return redirect("dashboard")
+
     profile, created = Profile.objects.get_or_create(user=request.user)
 
     my_skills = Skill.objects.filter(user=request.user)
 
     received_requests = SwapRequest.objects.filter(
         receiver=request.user
-    ).order_by('-created_at')
+    ).order_by("-created_at")
 
     sent_requests = SwapRequest.objects.filter(
         sender=request.user
-    ).order_by('-created_at')
+    ).order_by("-created_at")
 
     context = {
         "profile": profile,
         "my_skills": my_skills,
         "received_requests": received_requests,
         "sent_requests": sent_requests,
-        "skill_count": my_skills.count(),
-        "sent_count": sent_requests.count(),
-        "received_count": received_requests.count(),
     }
 
     return render(request, "userDashboard.html", context)
-
 
 @login_required
 def accept_request(request, request_id):
